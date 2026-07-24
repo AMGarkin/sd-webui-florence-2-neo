@@ -1,15 +1,15 @@
 # sd-webui-florence-2
 
-[中文](README.md) **|** [English](README_EN.md)
+[English](README.md) **|** [中文](README_JP.md)
 
-**sd-webui-florence-2** 能够解析并反推出图片中的内容
+**sd-webui-florence-2** can identify the content of images and describe them in natural language.
 
-## オリジナル版からの変更点
+## Changes from the original version
 
-使用のために変更されました [SD WebUI Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic).  
-変更は以下に基づいています [ComfyUI-Florence2 v1.0.7](https://github.com/kijai/ComfyUI-Florence2/tree/6c766b13f4908a86cfbd6357d6d485c80e0f3a2f)
+Modified for use with [SD WebUI Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic)  
+Modifications based on [ComfyUI-Florence2 v1.0.7](https://github.com/kijai/ComfyUI-Florence2/tree/6c766b13f4908a86cfbd6357d6d485c80e0f3a2f)
 
-注：WebUI Forge Neoのルートディレクトリにあるui-config.jsonファイルで、Florence 2タブで選択されているデフォルト値を変更できます。
+Note: You can change default values selected on the Florence 2 tab in the ui-config.json file located in the root directory of WebUI Forge Neo.
 
 ```text
     "florence/Select Model/visible": true,
@@ -23,9 +23,9 @@
     "florence/Send to img2img/visible": true
 ```
 
-## 安装
+## Installation
 
-> 视频教程: [https://www.bilibili.com/video/BV1JV8fePE6M/](https://www.bilibili.com/video/BV1JV8fePE6M/)
+> video: [https://www.bilibili.com/video/BV1JV8fePE6M/](https://www.bilibili.com/video/BV1JV8fePE6M/)
 
 1. Extensions -> Install from URL -> Enter URL of this repository -> Press Install button or clone this repository under extensions/
 
@@ -33,33 +33,33 @@
 git clone https://github.com/ilyq/sd-webui-florence-2 extensions/sd-webui-florence-2
 ```
 
-## 重要说明
+## Important Notice
 
-1. transformers 版本
+1. transformers version
 
-   1.1. 旧版本 transformers 不支持 Florence-2, 旧版本会出现以下报错:
+   1.1. Old versions of transformers do not support Florence-2, and using them will result in the following error:
 
    ```text
    TypeError: Object of type Florence2LanguageConfig is not JSON serializable
    ```
 
-   1.2. Automatic1111's Web UI 在 requirements.txt 和 requirements_versions.txt 文件中指定了 transformers 的旧版本 4.30.2.  
-   1.3. 更新 Transformers 版本可能会引发其他错误，请自行测试
+   1.2. Automatic1111's Web UI specifies an older version of transformers, 4.30.2, in the requirements.txt and requirements_versions.txt files.  
+   1.3. Updating the Transformers version may trigger other errors; please test it yourself.
 
-2. 模型保存目录: `models/LLM`
+2. model path: `models/LLM`
 
 ## Screenshot
 
 ![](screenshot.jpg)
 
-## 参考
+## Reference
 
-[microsoft/Florence-2-large](https://huggingface.co/microsoft/Florence-2-large)
+[https://huggingface.co/microsoft/Florence-2-large](https://huggingface.co/microsoft/Florence-2-large)
 
-## Hugging Faceに掲載されている「Florence-2」モデルの一部
+## Some of the Florence-2 models on Hugging Face
 
-[MiaoshouAI/Florence-2-large-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-large-PromptGen-v2.0) - 推奨  
-[MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) - 推奨  
+[MiaoshouAI/Florence-2-large-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-large-PromptGen-v2.0) - recommended  
+[MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) - recommended  
 [gokaygokay/Florence-2-Flux-Large](https://huggingface.co/gokaygokay/Florence-2-Flux-Large)  
 [thwri/CogFlorence-2.2-Large](https://huggingface.co/thwri/CogFlorence-2.2-Large)  
 [ljnlonoljpiljm/florence-2-large-nsfw-pretrain](https://huggingface.co/ljnlonoljpiljm/florence-2-large-nsfw-pretrain)  
