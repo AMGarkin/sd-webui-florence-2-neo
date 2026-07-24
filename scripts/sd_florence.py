@@ -28,12 +28,12 @@ except ImportError:
     from webui import wrap_gradio_gpu_call  # pylint: disable=import-error
 
 
-# https://huggingface.co/microsoft/Florence-2-large/blob/main/sample_inference.ipynb
+# https://huggingface.co/microsoft/Florence-2-large/blob/main/sample_inference.ipynb & finetune models dscriptions
 available_prompt_type = [
-    # === Microsoft ===
-    "<CAPTION>",
-    "<DETAILED_CAPTION>",
+    # -- basics (Microsoft) --
     "<MORE_DETAILED_CAPTION>",
+    "<DETAILED_CAPTION>",
+    "<CAPTION>",
     # "<OD>",                               # object detection
     # "<DENSE_REGION_CAPTION>",
     # "<REGION_PROPOSAL>",
@@ -45,33 +45,32 @@ available_prompt_type = [
     # "<REGION_TO_DESCRIPTION>",
     "<OCR>",
     # "<OCR_WITH_REGION>",
-    # === gokay aydogan ===
-    # "<DESCRIPTION>",
-    # === HuggingFaceM4 ===
-    # "<DocVQA>",                           # use: "<DocVQA>" + question
-    # === MiaoshouAI ===
+    # -- gokay aydogan --
+    "<DESCRIPTION>",                        # Flux-Large, generates tags. PromptGen-v2.0 works too.
+    # -- MiaoshouAI --
     "<GENERATE_TAGS>",
     "<MIXED_CAPTION>",
     "<MIXED_CAPTION_PLUS>",                 # PromptGen-v2.0
-    "<ANALYZE>"                             # PromptGen-v2.0
+    "<ANALYZE>",                            # PromptGen-v2.0
+    # -- HuggingFaceM4 --
+    # "<DocVQA>",                           # use: "<DocVQA>" + question
 ]
 
-# modified from https://github.com/kijai/ComfyUI-Florence2/blob/main/nodes.py#L139
 available_models = [
+    "MiaoshouAI/Florence-2-large-PromptGen-v2.0",
+    "MiaoshouAI/Florence-2-base-PromptGen-v2.0",
+    # "MiaoshouAI/Florence-2-large-PromptGen-v1.5",
+    # "MiaoshouAI/Florence-2-base-PromptGen-v1.5",
+    "gokaygokay/Florence-2-Flux-Large",
+    #"gokaygokay/Florence-2-SD3-Captioner",
+    "thwri/CogFlorence-2.2-Large",
+    # "thwri/CogFlorence-2.1-Large",
+    # "HuggingFaceM4/Florence-2-DocVQA",
+    "ljnlonoljpiljm/florence-2-large-nsfw-pretrain",
     "microsoft/Florence-2-large-ft",
     "microsoft/Florence-2-base-ft",
     # "microsoft/Florence-2-large",
     # "microsoft/Florence-2-base",
-    # "MiaoshouAI/Florence-2-base-PromptGen-v1.5",
-    # "MiaoshouAI/Florence-2-large-PromptGen-v1.5",
-    "MiaoshouAI/Florence-2-base-PromptGen-v2.0",
-    "MiaoshouAI/Florence-2-large-PromptGen-v2.0",
-    # "thwri/CogFlorence-2.1-Large",
-    "thwri/CogFlorence-2.2-Large",
-    # "gokaygokay/Florence-2-SD3-Captioner",
-    # "gokaygokay/Florence-2-Flux-Large",
-    # "HuggingFaceM4/Florence-2-DocVQA",
-    "PJMixers-Images/Florence-2-base-Castollux-v0.5"    # use <CAPTION> with this model
 ]
 
 
@@ -94,7 +93,7 @@ def generate_prompt_fn(
     prompt_type: str,
 ):
 
-    model_path = os.path.join(models_path, "Florence2", model_name)
+    model_path = os.path.join(models_path, "LLM", model_name)
 
     if not os.path.exists(model_path):
         print(f"Downloading model to: {model_path}")
@@ -109,8 +108,8 @@ def generate_prompt_fn(
              model = AutoModelForCausalLM.from_pretrained(model_path, attn_implementation="eager", torch_dtype=torch.float32, trust_remote_code=True).to(devices.device)
     else:
         from Florence2.modeling_florence2 import Florence2ForConditionalGeneration
-        model = Florence2ForConditionalGeneration.from_pretrained(model_path, attn_implementation="eager", dtype=torch.float32).to(devices.device)
-    processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+        model = Florence2ForConditionalGeneration.from_pretrained(model_path, attn_implementation="eager", dtype=torch.float32, local_files_only=True).to(devices.device)
+    processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True, local_files_only=True)
 
     inputs = processor(text=prompt_type, images=image, return_tensors="pt", do_rescale=False).to(devices.device)
 
@@ -125,7 +124,6 @@ def generate_prompt_fn(
         )
 
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=False)[0]
-    # print(generated_text)
 
     parsed_answer = processor.post_process_generation(
         generated_text,
@@ -194,11 +192,11 @@ def on_ui_tabs():
 
             generate_btn.click(
                 fn=wrap_gradio_gpu_call(generate_prompt_fn),
-                inputs=[image, model_name, max_new_token, prompt_type],
+                inputs=[image, model_name, max_new_token, prompt_type + " Describe this image in great detail." if prompt_type == "<DESCRIPTION>" else prompt_type],
                 outputs=[tags, html_tags],
             )
 
-    return [(florence_interface, "Florence-2", "florence")]
+    return [(florence_interface, "Florence 2", "florence")]
 
 
 # Setup A1111 initialisation hooks
