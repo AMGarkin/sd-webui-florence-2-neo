@@ -1,4 +1,4 @@
-**Modified for use with [SD WebUI Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic)**
+**Modified for use with [SD WebUI Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic)**  
 Modifications based on [ComfyUI-Florence2 v1.0.7](https://github.com/kijai/ComfyUI-Florence2/tree/6c766b13f4908a86cfbd6357d6d485c80e0f3a2f)
 
 # sd-webui-florence-2
