@@ -9,20 +9,6 @@
 Modified for use with [SD WebUI Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic)  
 Modifications based on [ComfyUI-Florence2 v1.0.7](https://github.com/kijai/ComfyUI-Florence2/tree/6c766b13f4908a86cfbd6357d6d485c80e0f3a2f)
 
-Note: You can change default values selected on the Florence 2 tab in the ui-config.json file located in the root directory of WebUI Forge Neo.
-
-```text
-    "florence/Select Model/visible": true,
-    "florence/Select Model/value": "MiaoshouAI/Florence-2-large-PromptGen-v2.0",
-    "florence/Max new token/visible": true,
-    "florence/Max new token/value": 1024,
-    "florence/Prompt Type/visible": true,
-    "florence/Prompt Type/value": "<MORE_DETAILED_CAPTION>",
-    "florence/Generate/visible": true,
-    "florence/Send to txt2img/visible": true,
-    "florence/Send to img2img/visible": true
-```
-
 ## Installation
 
 > video: [https://www.bilibili.com/video/BV1JV8fePE6M/](https://www.bilibili.com/video/BV1JV8fePE6M/)
@@ -33,20 +19,9 @@ Note: You can change default values selected on the Florence 2 tab in the ui-con
 git clone https://github.com/ilyq/sd-webui-florence-2 extensions/sd-webui-florence-2
 ```
 
-## Important Notice
+## Settings
 
-1. transformers version
-
-   1.1. Old versions of transformers do not support Florence-2, and using them will result in the following error:
-
-   ```text
-   TypeError: Object of type Florence2LanguageConfig is not JSON serializable
-   ```
-
-   1.2. Automatic1111's Web UI specifies an older version of transformers, 4.30.2, in the requirements.txt and requirements_versions.txt files.  
-   1.3. Updating the Transformers version may trigger other errors; please test it yourself.
-
-2. model path: `models/LLM`
+If you wish to change the default values ​​selected on the Florence 2 tab (or any other tab), open WebUI Neo: Settings -> Defaults.
 
 ## Screenshot
 

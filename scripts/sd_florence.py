@@ -7,7 +7,7 @@ ext_root = os.path.dirname(scripts_dir)
 if ext_root not in sys.path:
     sys.path.append(ext_root)
 
-import inspect
+import html
 from unittest.mock import patch
 
 import torch
@@ -93,6 +93,9 @@ def generate_prompt_fn(
     prompt_type: str,
 ):
 
+    if image is None:
+        raise gr.Error("Please upload an image first.")
+
     model_path = os.path.join(models_path, "LLM", model_name)
 
     if not os.path.exists(model_path):
@@ -111,7 +114,10 @@ def generate_prompt_fn(
         model = Florence2ForConditionalGeneration.from_pretrained(model_path, attn_implementation="eager", dtype=torch.float32, local_files_only=True).to(devices.device)
     processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True, local_files_only=True)
 
-    inputs = processor(text=prompt_type, images=image, return_tensors="pt", do_rescale=False).to(devices.device)
+    prompt = prompt_type
+    if prompt_type == "<DESCRIPTION>":
+        prompt += " Describe this image in great detail."
+    inputs = processor(text=prompt, images=image, return_tensors="pt", do_rescale=False).to(devices.device)
 
     with torch.no_grad():
         generated_ids = model.generate(
@@ -136,7 +142,7 @@ def generate_prompt_fn(
 
     model.to(devices.cpu)
 
-    return result, result
+    return result, html.escape(result).replace("\n", "<br>")
 
 
 def on_ui_tabs():
@@ -145,10 +151,7 @@ def on_ui_tabs():
         with gr.Row():
             # input
             with gr.Column(variant="panel"):
-                if "sources" in inspect.signature(gr.Image).parameters:
-                    image = gr.Image(sources=["upload"], interactive=True, type="pil")
-                else:
-                    image = gr.Image(interactive=True, type="pil")
+                image = gr.Image(sources=["upload"], interactive=True, type="pil")
 
                 model_name = gr.Dropdown(
                     label="Select Model",
@@ -191,8 +194,8 @@ def on_ui_tabs():
                     )
 
             generate_btn.click(
-                fn=wrap_gradio_gpu_call(generate_prompt_fn),
-                inputs=[image, model_name, max_new_token, prompt_type + " Describe this image in great detail." if prompt_type == "<DESCRIPTION>" else prompt_type],
+                fn=wrap_gradio_gpu_call(generate_prompt_fn, extra_outputs=[""]),
+                inputs=[image, model_name, max_new_token, prompt_type],
                 outputs=[tags, html_tags],
             )
 
